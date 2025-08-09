@@ -24,66 +24,9 @@ from jsonschema import Draft7Validator, ValidationError
 # Configuration schema
 # ---------------------------------------------------------------------------
 
-CONFIG_SCHEMA: Dict[str, Any] = {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "properties": {
-        "global": {
-            "type": "object",
-            "properties": {
-                "exporter": {"type": "string"},
-                "transport": {"type": "string"},
-                "port": {"type": "integer"},
-                "auth": {"type": "object"},
-                "opus": {"type": "object"},
-                "reexport": {"type": "object"},
-            },
-            "required": ["exporter", "transport", "port", "auth"],
-        },
-        "storage_nodes": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string"},
-                    "mgmt_ip": {"type": "string"},
-                    "data_ip": {"type": "string"},
-                    "host_nqn": {"type": "string"},
-                    "disks": {
-                        "type": "array",
-                        "items": {
-                            "type": "object",
-                            "properties": {
-                                "dev": {"type": "string"},
-                                "bdev_name": {"type": "string"},
-                                "block_size": {"type": "integer"},
-                                "expect": {"type": "object"},
-                                "export": {"type": "object"},
-                            },
-                            "required": ["dev", "bdev_name", "block_size", "export"],
-                        },
-                    },
-                },
-                "required": ["name", "mgmt_ip", "data_ip", "host_nqn", "disks"],
-            },
-        },
-        "aggregators": {
-            "type": "array",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "name": {"type": "string"},
-                    "mgmt_ip": {"type": "string"},
-                    "host_nqn": {"type": "string"},
-                    "connect": {"type": "array"},
-                    "raids": {"type": "array"},
-                },
-                "required": ["name", "mgmt_ip", "host_nqn"],
-            },
-        },
-    },
-    "required": ["global", "storage_nodes", "aggregators"],
-}
+CONFIG_SCHEMA_PATH = pathlib.Path(__file__).with_name("config_schema.json")
+with CONFIG_SCHEMA_PATH.open() as _schema_file:
+    CONFIG_SCHEMA: Dict[str, Any] = json.load(_schema_file)
 
 
 def load_config(path: pathlib.Path) -> Dict[str, Any]:
