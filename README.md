@@ -1,2 +1,2 @@
 # xiDIS
-Diaaggregated storage for IBM Storage Scale
+Disaggregated storage for IBM Storage Scale
